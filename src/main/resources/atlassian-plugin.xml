@@ -1,0 +1,30 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="1">
+    <!--
+    note that this plugin has to be a plugins-version '1' plugin as build module types (repositories, tasks, pre/post processors)
+    are plugins v1 only. Module types such as REST, Gadgets, Servlets and Filters are plugins v2 and cannot be mixed in the same
+    plugin as plugins v1 module types for the time being
+    -->
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+    </plugin-info>
+
+    <!-- internationalize your plugin -->
+    <resource type="i18n" name="myfirstplugin language" location="english"/>
+
+    <taskType name="rapiddeploy-plugin" class="com.midvision.rapiddeploy.bamboo.PackageBuildTask" key="packageBuildTask">
+      <description>Task can be used to build package in rapiddeploy</description>
+      <configuration class="com.midvision.rapiddeploy.bamboo.PackageBuildTaskConfigurator"/>
+      <resource type="freemarker" name="edit" location="editPackageBuildTask.ftl"/>
+      <resource type="freemarker" name="view" location="viewPackageBuildTask.ftl"/>
+    </taskType>
+
+    <taskType name="rapiddeploy-plugin" class="com.midvision.rapiddeploy.bamboo.ProjectDeployTask" key="projectDeployTask">
+      <description>Task can be used to perform deployment in rapiddeploy</description>
+      <configuration class="com.midvision.rapiddeploy.bamboo.ProjectDeployTaskConfigurator"/>
+      <resource type="freemarker" name="edit" location="editProjectDeployTask.ftl"/>
+      <resource type="freemarker" name="view" location="viewProjectDeployTask.ftl"/>
+    </taskType>
+
+</atlassian-plugin>

@@ -1,0 +1,7 @@
+[@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.server.url" name="serverUrl" required='true'/]
+[@ww.password labelKey="com.midvision.rapiddeploy.bamboo.authentication.token" name="authenticationToken" required='true'/]
+[@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.rapiddeployProjectName" name="rapiddeployProjectName" required='true'/]
+[@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.rapiddeployServerName" name="rapiddeployServerName" required='true'/]
+[@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.rapiddeployEnvironmentName" name="rapiddeployEnvironmentName" required='true'/]
+[@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.rapiddeployAppName" name="rapiddeployAppName" required='true'/]
+[@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.package.name" name="packageName" required='true'/]
