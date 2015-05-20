@@ -16,6 +16,7 @@
     <taskType name="RapidDeploy package build" class="com.midvision.rapiddeploy.bamboo.PackageBuildTask" key="packageBuildTask">
       <description>Task can be used to build package in rapiddeploy</description>
       <configuration class="com.midvision.rapiddeploy.bamboo.PackageBuildTaskConfigurator"/>
+      <category name="builder"/>
       <resource type="download" name="icon" location="midvision-icon.png"/>
       <resource type="freemarker" name="edit" location="editPackageBuildTask.ftl"/>
       <resource type="freemarker" name="view" location="viewPackageBuildTask.ftl"/>
@@ -24,6 +25,7 @@
     <taskType name="RapidDeploy project deploy" class="com.midvision.rapiddeploy.bamboo.ProjectDeployTask" key="projectDeployTask">
       <description>Task can be used to perform deployment in rapiddeploy</description>
       <configuration class="com.midvision.rapiddeploy.bamboo.ProjectDeployTaskConfigurator"/>
+      <category name="deployment"/>
       <resource type="download" name="icon" location="midvision-icon.png"/>
       <resource type="freemarker" name="edit" location="editProjectDeployTask.ftl"/>
       <resource type="freemarker" name="view" location="viewProjectDeployTask.ftl"/>
