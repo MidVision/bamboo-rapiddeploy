@@ -13,16 +13,18 @@
     <!-- internationalize your plugin -->
     <resource type="i18n" name="myfirstplugin language" location="english"/>
 
-    <taskType name="rapiddeploy-plugin" class="com.midvision.rapiddeploy.bamboo.PackageBuildTask" key="packageBuildTask">
+    <taskType name="RapidDeploy package build" class="com.midvision.rapiddeploy.bamboo.PackageBuildTask" key="packageBuildTask">
       <description>Task can be used to build package in rapiddeploy</description>
       <configuration class="com.midvision.rapiddeploy.bamboo.PackageBuildTaskConfigurator"/>
+      <resource type="download" name="icon" location="midvision-icon.png"/>
       <resource type="freemarker" name="edit" location="editPackageBuildTask.ftl"/>
       <resource type="freemarker" name="view" location="viewPackageBuildTask.ftl"/>
     </taskType>
 
-    <taskType name="rapiddeploy-plugin" class="com.midvision.rapiddeploy.bamboo.ProjectDeployTask" key="projectDeployTask">
+    <taskType name="RapidDeploy project deploy" class="com.midvision.rapiddeploy.bamboo.ProjectDeployTask" key="projectDeployTask">
       <description>Task can be used to perform deployment in rapiddeploy</description>
       <configuration class="com.midvision.rapiddeploy.bamboo.ProjectDeployTaskConfigurator"/>
+      <resource type="download" name="icon" location="midvision-icon.png"/>
       <resource type="freemarker" name="edit" location="editProjectDeployTask.ftl"/>
       <resource type="freemarker" name="view" location="viewProjectDeployTask.ftl"/>
     </taskType>
