@@ -5,3 +5,4 @@
 [@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.rapiddeployEnvironmentName" name="rapiddeployEnvironmentName" required='true'/]
 [@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.rapiddeployAppName" name="rapiddeployAppName" required='true'/]
 [@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.package.name" name="packageName" required='true'/]
+[@ww.checkbox labelKey="com.midvision.rapiddeploy.bamboo.isAsynchronous" toggle=true name="isAsynchronous"/]

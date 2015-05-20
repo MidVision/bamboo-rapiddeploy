@@ -28,7 +28,11 @@ public class ProjectDeployTaskConfigurator extends AbstractTaskConfigurator
       config.put("rapiddeployEnvironmentName", params.getString("rapiddeployEnvironmentName"));
       config.put("rapiddeployAppName", params.getString("rapiddeployAppName"));
       config.put("packageName", params.getString("packageName"));
-      // config.put("isAsynchronous", params.getBoolean("isAsynchronous"));
+      if(params.getBoolean("isAsynchronous")){
+        config.put("isAsynchronous", "true");
+      }else{
+        config.put("isAsynchronous", "false");
+      }
       return config;
     }
 
@@ -44,7 +48,7 @@ public class ProjectDeployTaskConfigurator extends AbstractTaskConfigurator
         context.put("rapiddeployEnvironmentName", "");
         context.put("rapiddeployAppName", "");
         context.put("packageName", "");
-        // context.put("isAsynchronous", true);
+        context.put("isAsynchronous", true);
     }
 
     @Override
@@ -59,7 +63,11 @@ public class ProjectDeployTaskConfigurator extends AbstractTaskConfigurator
         context.put("rapiddeployEnvironmentName", taskDefinition.getConfiguration().get("rapiddeployEnvironmentName"));
         context.put("rapiddeployAppName", taskDefinition.getConfiguration().get("rapiddeployAppName"));
         context.put("packageName", taskDefinition.getConfiguration().get("packageName"));
-        // context.put("isAsynchronous", taskDefinition.getConfiguration().get("isAsynchronous"));
+        if(taskDefinition.getConfiguration().get("isAsynchronous").equals("true")){
+          context.put("isAsynchronous", true);
+        }else{
+          context.put("isAsynchronous", false);
+        }
     }
 
     @Override
@@ -73,7 +81,11 @@ public class ProjectDeployTaskConfigurator extends AbstractTaskConfigurator
         context.put("rapiddeployEnvironmentName", taskDefinition.getConfiguration().get("rapiddeployEnvironmentName"));
         context.put("rapiddeployAppName", taskDefinition.getConfiguration().get("rapiddeployAppName"));
         context.put("packageName", taskDefinition.getConfiguration().get("packageName"));
-        // context.put("isAsynchronous", taskDefinition.getConfiguration().get("isAsynchronous"));
+        if(taskDefinition.getConfiguration().get("isAsynchronous").equals("true")){
+          context.put("isAsynchronous", true);
+        }else{
+          context.put("isAsynchronous", false);
+        }
     }
 
     @Override
