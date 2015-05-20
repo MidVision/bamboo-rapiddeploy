@@ -17,22 +17,24 @@ public class PackageBuildTask implements TaskType
     {
         final BuildLogger buildLogger = taskContext.getBuildLogger();
 
+
         final String serverUrl = taskContext.getConfigurationMap().get("serverUrl");
         final String authenticationToken =  taskContext.getConfigurationMap().get("authenticationToken");
         final String project =  taskContext.getConfigurationMap().get("rapiddeployProjectName");
         final String packageName =  taskContext.getConfigurationMap().get("packageName");
         final String archiveExension =  taskContext.getConfigurationMap().get("archiveExension");
+        buildLogger.addBuildLogEntry("Invoking RapidDeploy package builder via path: " + serverUrl);
         String output = null;
         try {
           output = RapidDeployConnector.invokeRapidDeployBuildPackage(authenticationToken, serverUrl, project, packageName, archiveExension, true);
         }catch(Exception e){
-          buildLogger.addBuildLogEntry("An exception occurred while performing rapiddeploy package build");
+          buildLogger.addBuildLogEntry("An exception occurred while performing rapiddeploy package build: ");
           buildLogger.addBuildLogEntry(e.getMessage());
         }
         if(output != null){
           buildLogger.addBuildLogEntry(output);
         }
-        buildLogger.addBuildLogEntry("Package Build task has been performed!");
+        buildLogger.addBuildLogEntry("Package build successfully requested!");
 
         return TaskResultBuilder.create(taskContext).success().build();
     }
