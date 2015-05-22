@@ -16,8 +16,9 @@ public class PackageBuildTaskConfigurator extends AbstractTaskConfigurator
 {
     private TextProvider textProvider;
     private EncryptionService encryptionService;
-    public static final String PLAIN_PASSWORD = "password";
-    public static final String PASSWORD = "encPassword";
+    public static final String PLAIN_AUTHENTICATION_TOKEN = "authenticationToken";
+    public static final String AUTHENTICATION_TOKEN = "encAuthenticationToken";
+    public static final String CHANGE_AUTHENTICATION_TOKEN = "change_authentication_token";
 
     @NotNull
     @Override
@@ -25,16 +26,21 @@ public class PackageBuildTaskConfigurator extends AbstractTaskConfigurator
     {
         final Map<String, String> config = super.generateTaskConfigMap(params, previousTaskDefinition);
         config.put("serverUrl", params.getString("serverUrl"));
-        if (previousTaskDefinition != null)
-       {
-           config.put(PASSWORD, previousTaskDefinition.getConfiguration().get(PASSWORD));
-       }
-       else
-       {
-           final String password = params.getString(PLAIN_PASSWORD);
-           config.put(PASSWORD, encryptionService.encrypt(password));
-       }
-        // config.put("authenticationToken", params.getString("authenticationToken"));
+        String passwordChange = params.getString(CHANGE_AUTHENTICATION_TOKEN);
+                if ("true".equals(passwordChange))
+                {
+                    final String password = params.getString(PLAIN_AUTHENTICATION_TOKEN);
+                    config.put(AUTHENTICATION_TOKEN, encryptionService.encrypt(password));
+                }
+                else if (previousTaskDefinition != null)
+                {
+                    config.put(AUTHENTICATION_TOKEN, previousTaskDefinition.getConfiguration().get(AUTHENTICATION_TOKEN));
+                }
+                else
+                {
+                    final String password = params.getString(PLAIN_AUTHENTICATION_TOKEN);
+                    config.put(AUTHENTICATION_TOKEN, encryptionService.encrypt(password));
+                }
         config.put("rapiddeployProjectName", params.getString("rapiddeployProjectName"));
         config.put("packageName", params.getString("packageName"));
         config.put("archiveExtension", params.getString("archiveExtension"));
@@ -59,8 +65,7 @@ public class PackageBuildTaskConfigurator extends AbstractTaskConfigurator
         super.populateContextForEdit(context, taskDefinition);
 
         context.put("serverUrl", taskDefinition.getConfiguration().get("serverUrl"));
-        context.put(PLAIN_PASSWORD, taskDefinition.getConfiguration().get(PASSWORD));
-        // context.put("authenticationToken", taskDefinition.getConfiguration().get("authenticationToken"));
+        context.put(PLAIN_AUTHENTICATION_TOKEN, taskDefinition.getConfiguration().get(AUTHENTICATION_TOKEN));
         context.put("rapiddeployProjectName", taskDefinition.getConfiguration().get("rapiddeployProjectName"));
         context.put("packageName", taskDefinition.getConfiguration().get("packageName"));
         context.put("archiveExtension", taskDefinition.getConfiguration().get("archiveExtension"));
@@ -71,7 +76,6 @@ public class PackageBuildTaskConfigurator extends AbstractTaskConfigurator
     {
         super.populateContextForView(context, taskDefinition);
         context.put("serverUrl", taskDefinition.getConfiguration().get("serverUrl"));
-        // context.put("authenticationToken", taskDefinition.getConfiguration().get("authenticationToken"));
         context.put("rapiddeployProjectName", taskDefinition.getConfiguration().get("rapiddeployProjectName"));
         context.put("packageName", taskDefinition.getConfiguration().get("packageName"));
         context.put("archiveExtension", taskDefinition.getConfiguration().get("archiveExtension"));
@@ -81,11 +85,14 @@ public class PackageBuildTaskConfigurator extends AbstractTaskConfigurator
     public void validate(@NotNull final ActionParametersMap params, @NotNull final ErrorCollection errorCollection)
     {
         super.validate(params, errorCollection);
-        String password = params.getString(PLAIN_PASSWORD);
-        if (StringUtils.isEmpty(password))
-        {
-          errorCollection.addError(PLAIN_PASSWORD, "You must specify authenticationToken");
-        }
+        if ("true".equals(params.getString(CHANGE_AUTHENTICATION_TOKEN)))
+                        {
+                            String password = params.getString(PLAIN_AUTHENTICATION_TOKEN);
+                            if (StringUtils.isEmpty(password))
+                            {
+                                errorCollection.addError(PLAIN_AUTHENTICATION_TOKEN, "You must specify password");
+                            }
+                        }
     }
 
     public void setTextProvider(final TextProvider textProvider)
