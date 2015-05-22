@@ -8,9 +8,12 @@ import com.atlassian.bamboo.task.TaskResultBuilder;
 import com.atlassian.bamboo.task.TaskType;
 import org.jetbrains.annotations.NotNull;
 import com.midvision.rapiddeploy.connector.RapidDeployConnector;
+import com.atlassian.bamboo.security.EncryptionService;
 
 public class PackageBuildTask implements TaskType
 {
+  private EncryptionService encryptionService;
+
     @NotNull
     @java.lang.Override
     public TaskResult execute(@NotNull final TaskContext taskContext) throws TaskException
@@ -19,17 +22,18 @@ public class PackageBuildTask implements TaskType
 
 
         final String serverUrl = taskContext.getConfigurationMap().get("serverUrl");
-        final String authenticationToken =  taskContext.getConfigurationMap().get("authenticationToken");
+        final String authenticationToken = encryptionService.decrypt(taskContext.getConfigurationMap().get(PackageBuildTaskConfigurator.AUTHENTICATION_TOKEN));
         final String project =  taskContext.getConfigurationMap().get("rapiddeployProjectName");
         final String packageName =  taskContext.getConfigurationMap().get("packageName");
-        final String archiveExension =  taskContext.getConfigurationMap().get("archiveExension");
+        final String archiveExtension =  taskContext.getConfigurationMap().get("archiveExtension");
         buildLogger.addBuildLogEntry("Invoking RapidDeploy package builder via path: " + serverUrl);
         String output = null;
         try {
-          output = RapidDeployConnector.invokeRapidDeployBuildPackage(authenticationToken, serverUrl, project, packageName, archiveExension, true);
+          output = RapidDeployConnector.invokeRapidDeployBuildPackage(authenticationToken, serverUrl, project, packageName, archiveExtension, true);
         }catch(Exception e){
           buildLogger.addBuildLogEntry("An exception occurred while performing rapiddeploy package build: ");
           buildLogger.addBuildLogEntry(e.getMessage());
+          return TaskResultBuilder.create(taskContext).failed().build();
         }
         if(output != null){
           buildLogger.addBuildLogEntry(output);
@@ -37,5 +41,10 @@ public class PackageBuildTask implements TaskType
         buildLogger.addBuildLogEntry("Package build successfully requested!");
 
         return TaskResultBuilder.create(taskContext).success().build();
+    }
+
+    public void setEncryptionService(EncryptionService encryptionService)
+    {
+        this.encryptionService = encryptionService;
     }
 }

@@ -8,16 +8,20 @@ import com.atlassian.bamboo.task.TaskResultBuilder;
 import com.atlassian.bamboo.task.TaskType;
 import org.jetbrains.annotations.NotNull;
 import com.midvision.rapiddeploy.connector.RapidDeployConnector;
+import com.atlassian.bamboo.security.EncryptionService;
 
 public class ProjectDeployTask implements TaskType
 {
+
+  private EncryptionService encryptionService;
+
     @NotNull
     @java.lang.Override
     public TaskResult execute(@NotNull final TaskContext taskContext) throws TaskException
     {
         final BuildLogger buildLogger = taskContext.getBuildLogger();
         final String serverUrl = taskContext.getConfigurationMap().get("serverUrl");
-        final String authenticationToken =  taskContext.getConfigurationMap().get("authenticationToken");
+        final String authenticationToken = encryptionService.decrypt(taskContext.getConfigurationMap().get(PackageBuildTaskConfigurator.AUTHENTICATION_TOKEN));
         final String project =  taskContext.getConfigurationMap().get("rapiddeployProjectName");
         final String server =  taskContext.getConfigurationMap().get("rapiddeployServerName");
         final String environment =  taskContext.getConfigurationMap().get("rapiddeployEnvironmentName");
@@ -80,5 +84,10 @@ public class ProjectDeployTask implements TaskType
           buildLogger.addBuildLogEntry(e.getMessage());
           return TaskResultBuilder.create(taskContext).failed().build();
         }
+    }
+
+    public void setEncryptionService(EncryptionService encryptionService)
+    {
+        this.encryptionService = encryptionService;
     }
 }

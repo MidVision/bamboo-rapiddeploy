@@ -53,7 +53,6 @@ public class PackageBuildTaskConfigurator extends AbstractTaskConfigurator
         super.populateContextForCreate(context);
 
         context.put("serverUrl", "");
-        // context.put("authenticationToken", "");
         context.put("rapiddeployProjectName", "");
         context.put("packageName", "");
         context.put("archiveExtension", "jar");
