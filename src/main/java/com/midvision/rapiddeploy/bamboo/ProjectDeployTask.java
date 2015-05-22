@@ -24,10 +24,14 @@ public class ProjectDeployTask implements TaskType
         final String application =  taskContext.getConfigurationMap().get("rapiddeployAppName");
         final String packageName =  taskContext.getConfigurationMap().get("packageName");
         final Boolean isAsynchronous =  taskContext.getConfigurationMap().get("isAsynchronous").equals("true") ? true : false;
-
+        final Boolean change_instance =  taskContext.getConfigurationMap().get("change_instance").equals("true") ? true : false;
+        String instance = null;
+        if(change_instance && taskContext.getConfigurationMap().get("instance") != null && taskContext.getConfigurationMap().get("instance").equals("") == false){
+           instance = taskContext.getConfigurationMap().get("instance");
+        }
         String output = null;
         try {
-          output = RapidDeployConnector.invokeRapidDeployDeployment(authenticationToken, serverUrl, project, server, environment, null, application, packageName, null, null, null, null, null);
+          output = RapidDeployConnector.invokeRapidDeployDeployment(authenticationToken, serverUrl, project, server, environment, instance, application, packageName, null, null, null, null, null);
           buildLogger.addBuildLogEntry("RapidDeploy job has successfully started!");
           if(!isAsynchronous){
             String jobId = RapidDeployConnector.extractJobId(output);

@@ -9,12 +9,15 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
+import com.atlassian.bamboo.security.EncryptionService;
 import java.util.Map;
 
 public class PackageBuildTaskConfigurator extends AbstractTaskConfigurator
 {
     private TextProvider textProvider;
+    private EncryptionService encryptionService;
+    public static final String PLAIN_PASSWORD = "password";
+    public static final String PASSWORD = "encPassword";
 
     @NotNull
     @Override
@@ -22,7 +25,16 @@ public class PackageBuildTaskConfigurator extends AbstractTaskConfigurator
     {
         final Map<String, String> config = super.generateTaskConfigMap(params, previousTaskDefinition);
         config.put("serverUrl", params.getString("serverUrl"));
-        config.put("authenticationToken", params.getString("authenticationToken"));
+        if (previousTaskDefinition != null)
+       {
+           config.put(PASSWORD, previousTaskDefinition.getConfiguration().get(PASSWORD));
+       }
+       else
+       {
+           final String password = params.getString(PLAIN_PASSWORD);
+           config.put(PASSWORD, encryptionService.encrypt(password));
+       }
+        // config.put("authenticationToken", params.getString("authenticationToken"));
         config.put("rapiddeployProjectName", params.getString("rapiddeployProjectName"));
         config.put("packageName", params.getString("packageName"));
         config.put("archiveExtension", params.getString("archiveExtension"));
@@ -35,7 +47,7 @@ public class PackageBuildTaskConfigurator extends AbstractTaskConfigurator
         super.populateContextForCreate(context);
 
         context.put("serverUrl", "");
-        context.put("authenticationToken", "");
+        // context.put("authenticationToken", "");
         context.put("rapiddeployProjectName", "");
         context.put("packageName", "");
         context.put("archiveExtension", "jar");
@@ -47,7 +59,8 @@ public class PackageBuildTaskConfigurator extends AbstractTaskConfigurator
         super.populateContextForEdit(context, taskDefinition);
 
         context.put("serverUrl", taskDefinition.getConfiguration().get("serverUrl"));
-        context.put("authenticationToken", taskDefinition.getConfiguration().get("authenticationToken"));
+        context.put(PLAIN_PASSWORD, taskDefinition.getConfiguration().get(PASSWORD));
+        // context.put("authenticationToken", taskDefinition.getConfiguration().get("authenticationToken"));
         context.put("rapiddeployProjectName", taskDefinition.getConfiguration().get("rapiddeployProjectName"));
         context.put("packageName", taskDefinition.getConfiguration().get("packageName"));
         context.put("archiveExtension", taskDefinition.getConfiguration().get("archiveExtension"));
@@ -58,7 +71,7 @@ public class PackageBuildTaskConfigurator extends AbstractTaskConfigurator
     {
         super.populateContextForView(context, taskDefinition);
         context.put("serverUrl", taskDefinition.getConfiguration().get("serverUrl"));
-        context.put("authenticationToken", taskDefinition.getConfiguration().get("authenticationToken"));
+        // context.put("authenticationToken", taskDefinition.getConfiguration().get("authenticationToken"));
         context.put("rapiddeployProjectName", taskDefinition.getConfiguration().get("rapiddeployProjectName"));
         context.put("packageName", taskDefinition.getConfiguration().get("packageName"));
         context.put("archiveExtension", taskDefinition.getConfiguration().get("archiveExtension"));
@@ -68,11 +81,20 @@ public class PackageBuildTaskConfigurator extends AbstractTaskConfigurator
     public void validate(@NotNull final ActionParametersMap params, @NotNull final ErrorCollection errorCollection)
     {
         super.validate(params, errorCollection);
-
+        String password = params.getString(PLAIN_PASSWORD);
+        if (StringUtils.isEmpty(password))
+        {
+          errorCollection.addError(PLAIN_PASSWORD, "You must specify authenticationToken");
+        }
     }
 
     public void setTextProvider(final TextProvider textProvider)
     {
         this.textProvider = textProvider;
+    }
+
+    public void setEncryptionService(EncryptionService encryptionService)
+    {
+        this.encryptionService = encryptionService;
     }
 }

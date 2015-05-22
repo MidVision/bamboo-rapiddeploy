@@ -15,6 +15,7 @@ import java.util.Map;
 public class ProjectDeployTaskConfigurator extends AbstractTaskConfigurator
 {
     private TextProvider textProvider;
+    public static final String CHANGE_INSTANCE = "change_instance";
 
     @NotNull
     @Override
@@ -33,6 +34,18 @@ public class ProjectDeployTaskConfigurator extends AbstractTaskConfigurator
       }else{
         config.put("isAsynchronous", "false");
       }
+
+      String instanceChange = params.getString(CHANGE_INSTANCE);
+      if ("true".equals(instanceChange))
+      {
+        final String password = params.getString("instance");
+        config.put("instance", password);
+        config.put(CHANGE_INSTANCE, "true");
+      }else{
+        config.put(CHANGE_INSTANCE, "false");
+        config.put("instance", "");
+      }
+
       return config;
     }
 
@@ -46,6 +59,7 @@ public class ProjectDeployTaskConfigurator extends AbstractTaskConfigurator
         context.put("rapiddeployProjectName", "");
         context.put("rapiddeployServerName", "");
         context.put("rapiddeployEnvironmentName", "");
+        context.put("instance", "");
         context.put("rapiddeployAppName", "");
         context.put("packageName", "");
         context.put("isAsynchronous", true);
@@ -68,6 +82,12 @@ public class ProjectDeployTaskConfigurator extends AbstractTaskConfigurator
         }else{
           context.put("isAsynchronous", false);
         }
+        if(taskDefinition.getConfiguration().get(CHANGE_INSTANCE).equals("true")){
+          context.put(CHANGE_INSTANCE, true);
+        }else{
+          context.put(CHANGE_INSTANCE, false);
+        }
+        context.put("instance", taskDefinition.getConfiguration().get("instance"));
     }
 
     @Override
@@ -86,6 +106,12 @@ public class ProjectDeployTaskConfigurator extends AbstractTaskConfigurator
         }else{
           context.put("isAsynchronous", false);
         }
+        if(taskDefinition.getConfiguration().get(CHANGE_INSTANCE).equals("true")){
+          context.put(CHANGE_INSTANCE, true);
+        }else{
+          context.put(CHANGE_INSTANCE, false);
+        }
+        context.put("instance", taskDefinition.getConfiguration().get("instance"));
     }
 
     @Override
