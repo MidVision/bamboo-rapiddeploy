@@ -15,6 +15,10 @@ Attributes:
 * Package name (optional): set a specific package name. If not filled, the next version will be assigned to the package automatically. This field doesn’t have to be used in general.
 * Archive extension: choose the package type from a list of extensions.
 
+![Choosing build package task](https://raw.githubusercontent.com/MidVision/bamboo-rapiddeploy/master/src/main/resources/choosingBuildPackageTask.png "Choosing build package task")
+
+![Configuring build package task](https://raw.githubusercontent.com/MidVision/bamboo-rapiddeploy/master/src/main/resources/buildPackageTaskConfiguration.png "Configuring build package task")
+
 
 ### RapidDeploy project deploy task
 
@@ -28,5 +32,10 @@ Attributes:
 * RapidDeploy application: application name which you want to deploy to.
 * Deployment package name: provide a deployment package name in RapidDeploy, which you want to deploy. Select value LATEST, if you want to deploy the latest package.  
 * Asynchronous job: check this box to run the RapidDeploy job asynchronously. This will continue to the next Bamboo step immediately once the job request has been made to RapidDeploy. Use this to run jobs in parallel. (Synchronous jobs are supported from RapidDeploy version 3.4.0+)
+
+
+![Choosing project deploy task](https://raw.githubusercontent.com/MidVision/bamboo-rapiddeploy/master/src/main/resources/choosingProjectDeployTask.png "Choosing project deploy task")
+
+![Configuring project deploy task](https://raw.githubusercontent.com/MidVision/bamboo-rapiddeploy/master/src/main/resources/projectDeployTaskConfiguration.png "Configuring project deploy task")
 
 For further information how to use RapidDeploy please go to [MidVision](http://www.midvision.com/product) site and check the technical documentation for [RapidDeploy product](http://docs.midvision.com/LATEST/)
