@@ -1,6 +1,6 @@
 # RapidDeploy plugin
 
-This plugin allows you to use [RapidDeploy](http://www.midvision.com/product) from Jenkins. The plugin can be used with RapidDeploy 3.3.79+ (We recommend the newest 3.5.18 version).
+This plugin allows you to use [RapidDeploy](http://www.midvision.com/product) from Bamboo. The plugin can be used with RapidDeploy 3.3.79+ (We recommend the newest 3.5.18 version).
 
 There are two tasks that you can use in your jobs in Bamboo
 * [RapidDeploy build package task](http://docs.midvision.com/LATEST/project/package.html) invoke RapidDeploy server to build a package in the configured artifact repository. You can check the result and the log output in the Job Result summary in your Bamboo instance.
