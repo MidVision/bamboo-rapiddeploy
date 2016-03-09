@@ -4,5 +4,5 @@
 [@ww.label labelKey="com.midvision.rapiddeploy.bamboo.rapiddeployServerName" name="rapiddeployServerName"/]
 [@ww.label labelKey="com.midvision.rapiddeploy.bamboo.rapiddeployEnvironmentName" name="rapiddeployEnvironmentName"/]
 [@ww.label labelKey="com.midvision.rapiddeploy.bamboo.rapiddeployAppName" name="rapiddeployAppName"/]
-[@ww.label labelKey="com.midvision.rapiddeploy.bamboo.package.name" name="packageName"/]
+[@ww.label labelKey="com.midvision.rapiddeploy.bamboo.deploy.package.name" name="packageName"/]
 [@ww.label labelKey="com.midvision.rapiddeploy.bamboo.isAsynchronous" name="isAsynchronous"/]

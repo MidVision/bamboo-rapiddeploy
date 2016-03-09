@@ -9,5 +9,5 @@
     [@ww.password labelKey="com.midvision.rapiddeploy.bamboo.authentication.token" name="authenticationToken" required="true" /]
 [/#if]
 [@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.rapiddeployProjectName" name="rapiddeployProjectName" required='true'/]
-[@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.package.name" name="packageName" required='true'/]
-[@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.archive.extension" name="archiveExtension" required='true'/]
+[@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.package.name" name="packageName" required='false'/]
+[@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.archive.extension" name="archiveExtension" required='false'/]
