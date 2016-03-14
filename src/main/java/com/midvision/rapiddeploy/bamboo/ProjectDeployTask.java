@@ -1,14 +1,15 @@
 package com.midvision.rapiddeploy.bamboo;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.atlassian.bamboo.build.logger.BuildLogger;
+import com.atlassian.bamboo.security.EncryptionService;
 import com.atlassian.bamboo.task.TaskContext;
 import com.atlassian.bamboo.task.TaskException;
 import com.atlassian.bamboo.task.TaskResult;
 import com.atlassian.bamboo.task.TaskResultBuilder;
 import com.atlassian.bamboo.task.TaskType;
-import org.jetbrains.annotations.NotNull;
 import com.midvision.rapiddeploy.connector.RapidDeployConnector;
-import com.atlassian.bamboo.security.EncryptionService;
 
 public class ProjectDeployTask implements TaskType {
 
@@ -34,62 +35,65 @@ public class ProjectDeployTask implements TaskType {
 		}
 		String output = null;
 		try {
-			output = RapidDeployConnector.invokeRapidDeployDeployment(authenticationToken, serverUrl, project, server, environment, instance, application,
-					packageName, null, null, null, null, null);
-			buildLogger.addBuildLogEntry("RapidDeploy job has successfully started!");
+			final String targetName = instance != null && !"".equals(instance) ? server + "." + environment + "." + instance + "." + application : server + "."
+					+ environment + "." + application;
+			output = RapidDeployConnector.invokeRapidDeployDeploymentPollOutput(authenticationToken, serverUrl, project, targetName, packageName, false, true);
 			if (!isAsynchronous) {
-				String jobId = RapidDeployConnector.extractJobId(output);
+				buildLogger.addBuildLogEntry("The RapidDeploy job has successfully started!");
+				boolean success = true;
+				final String jobId = RapidDeployConnector.extractJobId(output);
 				if (jobId != null) {
-					buildLogger.addBuildLogEntry("Checking job status in every 30 seconds...");
+					buildLogger.addBuildLogEntry("Checking job status every 30 seconds...");
 					boolean runningJob = true;
-					long millisToSleep = 30000;
+					long milisToSleep = 30000L;
 					while (runningJob) {
-						Thread.sleep(millisToSleep);
-						String jobDetails = RapidDeployConnector.pollRapidDeployJobDetails(authenticationToken, serverUrl, jobId);
-						String jobStatus = RapidDeployConnector.extractJobStatus(jobDetails);
-						buildLogger.addBuildLogEntry("Job status is: " + jobStatus);
-						if (jobStatus.equals("DEPLOYING") || jobStatus.equals("QUEUED") || jobStatus.equals("STARTING") || jobStatus.equals("EXECUTING")) {
-							buildLogger.addBuildLogEntry("Job is running, next check in 30 seconds..");
-							millisToSleep = 30000;
-						} else if (jobStatus.equals("REQUESTED") || jobStatus.equals("REQUESTED_SCHEDULED")) {
+						Thread.sleep(milisToSleep);
+						final String jobDetails = RapidDeployConnector.pollRapidDeployJobDetails(authenticationToken, serverUrl, jobId);
+						final String jobStatus = RapidDeployConnector.extractJobStatus(jobDetails);
+						buildLogger.addBuildLogEntry("Job status: " + jobStatus);
+						if ((jobStatus.equals("DEPLOYING")) || (jobStatus.equals("QUEUED")) || (jobStatus.equals("STARTING"))
+								|| (jobStatus.equals("EXECUTING"))) {
+							buildLogger.addBuildLogEntry("Job running, next check in 30 seconds...");
+							milisToSleep = 30000L;
+						} else if ((jobStatus.equals("REQUESTED")) || (jobStatus.equals("REQUESTED_SCHEDULED"))) {
 							buildLogger
-									.addBuildLogEntry("Job is in a REQUESTED state. Approval may be required in RapidDeploy to continue with execution, next check in 30 seconds..");
+									.addBuildLogEntry("Job in a REQUESTED state. Approval may be required in RapidDeploy to continue with the execution, next check in 30 seconds...");
 						} else if (jobStatus.equals("SCHEDULED")) {
-							buildLogger.addBuildLogEntry("Job is in a SCHEDULED state, execution will start in a future date, next check in 5 minutes..");
-							buildLogger.addBuildLogEntry("Printing out job details");
+							buildLogger.addBuildLogEntry("Job in a SCHEDULED state, the execution will start in a future date, next check in 5 minutes...");
+							buildLogger.addBuildLogEntry("Printing out job details: ");
 							buildLogger.addBuildLogEntry(jobDetails);
-							millisToSleep = 300000;
+							milisToSleep = 300000L;
 						} else {
 							runningJob = false;
-							buildLogger.addBuildLogEntry("Job is finished with status " + jobStatus);
-							if (jobStatus.equals("FAILED") || jobStatus.equals("REJECTED") || jobStatus.equals("CANCELLED") || jobStatus.equals("UNEXECUTABLE")
-									|| jobStatus.equals("TIMEDOUT") || jobStatus.equals("UNKNOWN")) {
-								return TaskResultBuilder.newBuilder(taskContext).failed().build();
+							buildLogger.addBuildLogEntry("Job finished with status: " + jobStatus);
+							if ((jobStatus.equals("FAILED")) || (jobStatus.equals("REJECTED")) || (jobStatus.equals("CANCELLED"))
+									|| (jobStatus.equals("UNEXECUTABLE")) || (jobStatus.equals("TIMEDOUT")) || (jobStatus.equals("UNKNOWN"))) {
+								success = false;
 							}
 						}
 					}
 				} else {
-					throw new Exception("Could not retrieve job id, running asynchronously!");
+					throw new RuntimeException("Could not retrieve job id, running asynchronously!");
 				}
-				String logs = RapidDeployConnector.pollRapidDeployJobLog(authenticationToken, serverUrl, jobId);
+				final String logs = RapidDeployConnector.pollRapidDeployJobLog(authenticationToken, serverUrl, jobId);
+				if (!success) {
+					throw new RuntimeException("RapidDeploy job failed. Please check the output." + System.getProperty("line.separator") + logs);
+				}
+				buildLogger.addBuildLogEntry("RapidDeploy job successfully run. Please check the output.");
+				buildLogger.addBuildLogEntry(System.getProperty("line.separator"));
 				buildLogger.addBuildLogEntry(logs);
 			} else {
-				buildLogger.addBuildLogEntry("Job is running asynchronously. You can check the results of the deployments here once finished: " + serverUrl
-						+ "/ws/feed/" + project + "/list/jobs");
+				buildLogger.addBuildLogEntry("The project Deploy task has been successfully requested!");
 			}
-			if (output != null) {
-				buildLogger.addBuildLogEntry(output);
-			}
-			buildLogger.addBuildLogEntry("Project Deploy task has been performed!");
 			return TaskResultBuilder.newBuilder(taskContext).success().build();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			buildLogger.addBuildLogEntry("An exception occurred while performing rapiddeploy project deployment: ");
 			buildLogger.addBuildLogEntry(e.getMessage());
 			return TaskResultBuilder.newBuilder(taskContext).failed().build();
 		}
 	}
 
-	public void setEncryptionService(EncryptionService encryptionService) {
+	public void setEncryptionService(final EncryptionService encryptionService) {
 		this.encryptionService = encryptionService;
 	}
 }
