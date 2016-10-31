@@ -1,6 +1,6 @@
 # RapidDeploy plugin
 
-This plugin allows you to use [RapidDeploy](http://www.midvision.com/product) from Bamboo. The plugin can be used with RapidDeploy 3.3.79+ (We recommend the newest 3.5.18 version).
+This plugin allows you to use [RapidDeploy](http://www.midvision.com/product) from Bamboo. The plugin can be used with RapidDeploy. We recommend the newest 4.1+ version(bamboo plugin release 1.2.+), however you can also use it with older versions of RapidDeploy (release 1.1 is compatible with RapidDeploy 3.3.79 - 3.5.31).
 
 There are two tasks that you can use in your jobs in Bamboo
 * [RapidDeploy build package task](http://docs.midvision.com/LATEST/project/package.html) invoke RapidDeploy server to build a package in the configured artifact repository. You can check the result and the log output in the Job Result summary in your Bamboo instance.
@@ -28,7 +28,7 @@ Attributes:
 * RapidDeploy project: RapidDeploy project name, which you want to run the deployment for.
 * RapidDeploy server: server name in RapidDeploy which you want to deploy to.
 * RapidDeploy environment: environment name in RapidDeploy which you want to deploy to.
-* RapidDeploy instance (used only for versions 3.3 and 3.4 - for 3.5 please leave it unspecified): instance name in RapidDeploy which you want to deploy to.
+* RapidDeploy instance (used only for versions 3.3 and 3.4 - for 3.5 and 4.1+ please leave it unspecified): instance name in RapidDeploy which you want to deploy to.
 * RapidDeploy application: application name which you want to deploy to.
 * Deployment package name: provide a deployment package name in RapidDeploy, which you want to deploy. Select value LATEST, if you want to deploy the latest package.  
 * Asynchronous job: check this box to run the RapidDeploy job asynchronously. This will continue to the next Bamboo step immediately once the job request has been made to RapidDeploy. Use this to run jobs in parallel. (Synchronous jobs are supported from RapidDeploy version 3.4.0+)
