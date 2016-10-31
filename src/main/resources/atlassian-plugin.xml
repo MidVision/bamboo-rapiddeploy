@@ -1,18 +1,12 @@
-<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="1">
-    <!--
-    note that this plugin has to be a plugins-version '1' plugin as build module types (repositories, tasks, pre/post processors)
-    are plugins v1 only. Module types such as REST, Gadgets, Servlets and Filters are plugins v2 and cannot be mixed in the same
-    plugin as plugins v1 module types for the time being
-    -->
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
     <plugin-info>
         <description>${project.description}</description>
         <version>${project.version}</version>
         <vendor name="${project.organization.name}" url="${project.organization.url}" />
     </plugin-info>
 
-    <!-- internationalize your plugin -->
+    <!-- add our i18n resource -->
     <resource type="i18n" name="myfirstplugin language" location="english"/>
-
     <taskType name="RapidDeploy package build" class="com.midvision.rapiddeploy.bamboo.PackageBuildTask" key="packageBuildTask">
       <description>Task can be used to build package in rapiddeploy</description>
       <configuration class="com.midvision.rapiddeploy.bamboo.PackageBuildTaskConfigurator"/>
@@ -31,4 +25,16 @@
       <resource type="freemarker" name="view" location="viewProjectDeployTask.ftl"/>
     </taskType>
 
+
+    <!-- add our web resources -->
+    <web-resource key="bamboo-rapiddeploy-new-resources" name="bamboo-rapiddeploy-new Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="bamboo-rapiddeploy-new.css" location="/css/bamboo-rapiddeploy-new.css"/>
+        <resource type="download" name="bamboo-rapiddeploy-new.js" location="/js/bamboo-rapiddeploy-new.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>bamboo-rapiddeploy-new</context>
+    </web-resource>
+    
 </atlassian-plugin>
