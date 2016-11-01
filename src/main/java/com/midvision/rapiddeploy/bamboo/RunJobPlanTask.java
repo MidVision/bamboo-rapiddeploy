@@ -21,7 +21,7 @@ public class RunJobPlanTask implements TaskType {
 		final BuildLogger buildLogger = taskContext.getBuildLogger();
 		final String serverUrl = taskContext.getConfigurationMap().get("serverUrl");
 		final String authenticationToken = encryptionService.decrypt(taskContext.getConfigurationMap().get(PackageBuildTaskConfigurator.AUTHENTICATION_TOKEN));
-		final String project = taskContext.getConfigurationMap().get("jobPlanId");
+		final String jobPlanId = taskContext.getConfigurationMap().get("jobPlanId");
 
 		final Boolean isAsynchronous = taskContext.getConfigurationMap().get("isAsynchronous").equals("true") ? true : false;
 		final Boolean change_instance = taskContext.getConfigurationMap().get("change_instance").equals("true") ? true : false;
@@ -29,7 +29,7 @@ public class RunJobPlanTask implements TaskType {
 		String output = null;
 		try {
 
-			output = RapidDeployConnector.invokeRapidDeployJobPlanPollOutput(authenticationToken, serverUrl, project, targetName, packageName, false, true);
+			output = RapidDeployConnector.invokeRapidDeployJobPlanPollOutput(authenticationToken, serverUrl, jobPlanId, true);
 			if (!isAsynchronous) {
 				buildLogger.addBuildLogEntry("The RapidDeploy job has successfully started!");
 				boolean success = true;
