@@ -179,7 +179,8 @@ public class RapidDeployConnector {
 		return logEnabled ? response.toString() : output;
 	}
 
-	public static String invokeRapidDeployJobPlanPollOutput(final String authenticationToken, final String serverUrl, final String jobPlanId, final boolean asynchronousJob){
+	public static String invokeRapidDeployJobPlanPollOutput(final String authenticationToken, final String serverUrl, final String jobPlanId, final boolean asynchronousJob)
+	throws Exception {
 		String output;
 		output = invokeRapiDeployJobPlan(authenticationToken, serverUrl, jobPlanId);
 		final StringBuilder response = new StringBuilder();
@@ -287,7 +288,7 @@ public class RapidDeployConnector {
 		return callRDServerPutReq(deploymentUrl, authenticationToken);
 	}
 
-	private static String invokeRapiDeployJobPlan(final String authenticationToken, final String serverUrl, final String jobPlanId){
+	private static String invokeRapiDeployJobPlan(final String authenticationToken, final String serverUrl, final String jobPlanId) throws Exception {
 		final String runJobPlanUrl = buildRunJobPlanUrl(serverUrl, jobPlanId);
 		return callRDServerPutReq(runJobPlanUrl, authenticationToken);
 	}
