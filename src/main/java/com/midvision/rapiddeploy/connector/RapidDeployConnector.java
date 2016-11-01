@@ -26,7 +26,7 @@ public class RapidDeployConnector {
 
 	/**
 	 * Runs a Job in RapidDeploy with basic information.
-	 * 
+	 *
 	 * @param authenticationToken
 	 * @param serverUrl
 	 * @param projectName
@@ -44,7 +44,7 @@ public class RapidDeployConnector {
 
 	/**
 	 * Runs a Job in RapidDeploy with specific transport credentials.
-	 * 
+	 *
 	 * @param authenticationToken
 	 * @param serverUrl
 	 * @param projectName
@@ -68,7 +68,7 @@ public class RapidDeployConnector {
 
 	/**
 	 * Runs a Job in RapidDeploy providing the option to run it asynchronously.
-	 * 
+	 *
 	 * @param authenticationToken
 	 * @param serverUrl
 	 * @param projectName
@@ -88,7 +88,7 @@ public class RapidDeployConnector {
 	/**
 	 * Runs a Job in RapidDeploy providing the options to run it asynchronously
 	 * and selecting if running or not previously failed packages.
-	 * 
+	 *
 	 * @param authenticationToken
 	 * @param serverUrl
 	 * @param projectName
@@ -110,7 +110,7 @@ public class RapidDeployConnector {
 	/**
 	 * Runs a Job in RapidDeploy with specific transport credentials and
 	 * providing the option to run it asynchronously as well.
-	 * 
+	 *
 	 * @param authenticationToken
 	 * @param serverUrl
 	 * @param projectName
@@ -135,7 +135,7 @@ public class RapidDeployConnector {
 
 	/**
 	 * Runs a Job in RapidDeploy with all possible options (Main method).
-	 * 
+	 *
 	 * @param authenticationToken
 	 * @param serverUrl
 	 * @param projectName
@@ -174,6 +174,18 @@ public class RapidDeployConnector {
 		response.append(System.getProperty("line.separator"));
 
 		if (!asynchronousJob) {
+			checkJobStatus(authenticationToken, serverUrl, output, response);
+		}
+		return logEnabled ? response.toString() : output;
+	}
+
+	public static String invokeRapidDeployJobPlanPollOutput(final String authenticationToken, final String serverUrl, final String jobPlanId, final boolean asynchronousJob){
+		String output;
+		output = invokeRapiDeployJobPlan(authenticationToken, serverUrl, jobPlanId);
+		final StringBuilder response = new StringBuilder();
+		response.append("RapidDeploy jobPlan successfully started");
+		response.append(System.getProperty("line.separator"));
+		if(!asynchronousJob){
 			checkJobStatus(authenticationToken, serverUrl, output, response);
 		}
 		return logEnabled ? response.toString() : output;
@@ -275,6 +287,11 @@ public class RapidDeployConnector {
 		return callRDServerPutReq(deploymentUrl, authenticationToken);
 	}
 
+	private static String invokeRapiDeployJobPlan(final String authenticationToken, final String serverUrl, final String jobPlanId){
+		final String runJobPlanUrl = buildRunJobPlanUrl(serverUrl, jobPlanId);
+		return callRDServerPutReq(runJobPlanUrl, authenticationToken);
+	}
+
 	/** URL GENERATION METHODS **/
 
 	private static String buildRequestUrl(String serverUrl, final String context) {
@@ -302,6 +319,20 @@ public class RapidDeployConnector {
 		url.append(packageName == null ? "" : packageName).append("&archiveExtension=")
 				.append(archiveExtension == null || "".equals(archiveExtension) ? "jar" : archiveExtension);
 
+		return url.toString();
+	}
+
+	private static String buildRunJobPlanUrl(String serverUrl, final String jobPlanId){
+		if (serverUrl != null && serverUrl.endsWith("/")) {
+			serverUrl = serverUrl.substring(0, serverUrl.length() - 1);
+		}
+		final StringBuilder url = new StringBuilder();
+		if (!serverUrl.startsWith("http://")) {
+			url.append("http://");
+		}
+		url.append(serverUrl).append("/ws/deployment/");
+		url.append("jobPlan/run/");
+		url.append(jobPlanId);
 		return url.toString();
 	}
 
