@@ -24,7 +24,6 @@ public class RunJobPlanTask implements TaskType {
 		final String jobPlanId = taskContext.getConfigurationMap().get("jobPlanId");
 
 		final Boolean isAsynchronous = taskContext.getConfigurationMap().get("isAsynchronous").equals("true") ? true : false;
-		final Boolean change_instance = taskContext.getConfigurationMap().get("change_instance").equals("true") ? true : false;
 
 		String output = null;
 		try {
