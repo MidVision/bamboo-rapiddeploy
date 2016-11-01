@@ -188,7 +188,7 @@ public class RapidDeployConnector {
 		if(!asynchronousJob){
 			checkJobStatus(authenticationToken, serverUrl, output, response);
 		}
-		return logEnabled ? response.toString() : output;
+		return response.toString();
 	}
 
 	public static String invokeRapidDeployBuildPackage(final String authenticationToken, final String serverUrl, final String projectName,
