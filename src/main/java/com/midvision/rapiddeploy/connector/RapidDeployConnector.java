@@ -189,7 +189,7 @@ public class RapidDeployConnector {
 		if(!asynchronousJob){
 			checkJobStatus(authenticationToken, serverUrl, output, response);
 		}
-		return response.toString();
+		return output;
 	}
 
 	public static String invokeRapidDeployBuildPackage(final String authenticationToken, final String serverUrl, final String projectName,
