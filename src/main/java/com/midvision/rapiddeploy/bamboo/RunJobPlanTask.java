@@ -24,6 +24,7 @@ public class RunJobPlanTask implements TaskType {
 		final String jobPlanId = taskContext.getConfigurationMap().get("jobPlanId");
 
 		final Boolean isAsynchronous = taskContext.getConfigurationMap().get("isAsynchronous").equals("true") ? true : false;
+		final Boolean showFullLogs = taskContext.getConfigurationMap().get("showFullLogs").equals("true") ? true : false;
 
 		String output = null;
 		try {
@@ -68,12 +69,23 @@ public class RunJobPlanTask implements TaskType {
 					throw new RuntimeException("Could not retrieve job id, running asynchronously!");
 				}
 				final String logs = RapidDeployConnector.pollRapidDeployJobLog(authenticationToken, serverUrl, jobId);
+				final StringBuilder fullLogs = new StringBuilder();
+				fullLogs.append(logs).append("\n");
+
+				if(showFullLogs){}
+					List<String> includedJobIds = extractIncludedJobIdsUnderPipelineJob(jobDetails);
+					for(String internalJobId : includedJobIds){
+						fullLogs.append("LOGS RELATED TO JOB ID: ").append(internalJobId).append("\n");
+						fullLogs.append(RapidDeployConnector.pollRapidDeployJobLog(authenticationToken, serverUrl, internalJobId);)
+					}
+				}
+
 				if (!success) {
-					throw new RuntimeException("RapidDeploy job failed. Please check the output." + System.getProperty("line.separator") + logs);
+					throw new RuntimeException("RapidDeploy job failed. Please check the output." + System.getProperty("line.separator") + fullLogs.toString());
 				}
 				buildLogger.addBuildLogEntry("RapidDeploy job successfully run. Please check the output.");
 				buildLogger.addBuildLogEntry(System.getProperty("line.separator"));
-				buildLogger.addBuildLogEntry(logs);
+				buildLogger.addBuildLogEntry(fullLogs.toString());
 			} else {
 				buildLogger.addBuildLogEntry("The project Deploy task has been successfully requested!");
 			}

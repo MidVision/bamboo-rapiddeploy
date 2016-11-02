@@ -42,6 +42,12 @@ public class RunJobPlanTaskConfigurator extends AbstractTaskConfigurator {
 		} else {
 			config.put("isAsynchronous", "false");
 		}
+		if (params.getBoolean("showFullLogs")){
+			config.put("showFullLogs", "true");
+		}else {
+			config.put("showFullLogs", "false");
+		}
+
 
 		return config;
 	}
@@ -53,6 +59,7 @@ public class RunJobPlanTaskConfigurator extends AbstractTaskConfigurator {
 		context.put("serverUrl", "");
 		context.put("jobPlanId", "");
 		context.put("isAsynchronous", true);
+		context.put("showFullLogs", false);
 	}
 
 	@Override
@@ -68,6 +75,11 @@ public class RunJobPlanTaskConfigurator extends AbstractTaskConfigurator {
 		} else {
 			context.put("isAsynchronous", false);
 		}
+		if (taskDefinition.getConfiguration().get("showFullLogs").equals("true")) {
+			context.put("showFullLogs", true);
+		} else {
+			context.put("showFullLogs", false);
+		}
 	}
 
 	@Override
@@ -79,6 +91,11 @@ public class RunJobPlanTaskConfigurator extends AbstractTaskConfigurator {
 			context.put("isAsynchronous", true);
 		} else {
 			context.put("isAsynchronous", false);
+		}
+		if (taskDefinition.getConfiguration().get("showFullLogs").equals("true")) {
+			context.put("showFullLogs", true);
+		} else {
+			context.put("showFullLogs", false);
 		}
 	}
 

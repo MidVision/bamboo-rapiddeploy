@@ -10,3 +10,4 @@
 [/#if]
 [@ww.textfield labelKey="com.midvision.rapiddeploy.bamboo.jobPlanId" name="jobPlanId" required='true'/]
 [@ww.checkbox labelKey="com.midvision.rapiddeploy.bamboo.isAsynchronous" toggle=true name="isAsynchronous"/]
+[@ww.checkbox labelKey="com.midvision.rapiddeploy.bamboo.showFullLogs" toggle=true name="showFullLogs"/]

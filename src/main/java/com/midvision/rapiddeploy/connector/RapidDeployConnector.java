@@ -530,6 +530,17 @@ public class RapidDeployConnector {
 		return jobStatus;
 	}
 
+	public static List<String> extractIncludedJobIdsUnderPipelineJob (final String responseOutput) throws Exception {
+		List<String> includedJobIds = new ArrayList<String>();
+		final List<String> responseData = extractTagValueFromXml(responseOutput, "span");
+		for (int i = 0; i < responseData.size(); i++) {
+			if ((((String) responseData.get(i)).contains("Internal Job ID")) && (responseData.size() >= i + 1)) {
+				includedJobIds.add((String) responseData.get(i + 1));
+			}
+		}
+		return includedJobIds;
+	}
+
 	public static String extractJobId(final String responseOutput) throws Exception {
 		String jobId = null;
 		final List<String> responseData = extractTagValueFromXml(responseOutput, "span");
