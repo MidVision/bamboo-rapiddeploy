@@ -41,6 +41,7 @@ public class RunJobPlanTask implements TaskType {
 						Thread.sleep(milisToSleep);
 						final String jobDetails = RapidDeployConnector.pollRapidDeployJobDetails(authenticationToken, serverUrl, jobId);
 						final String jobStatus = RapidDeployConnector.extractJobStatus(jobDetails);
+						buildLogger.addBuildLogEntry("Job details: " + jobDetails);
 						buildLogger.addBuildLogEntry("Job status: " + jobStatus);
 						if ((jobStatus.equals("DEPLOYING")) || (jobStatus.equals("QUEUED")) || (jobStatus.equals("STARTING"))
 								|| (jobStatus.equals("EXECUTING"))) {
