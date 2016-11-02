@@ -32,7 +32,7 @@ public class RunJobPlanTask implements TaskType {
 
 			output = RapidDeployConnector.invokeRapidDeployJobPlanPollOutput(authenticationToken, serverUrl, jobPlanId, true);
 			if (!isAsynchronous) {
-				final String jobDetails = "";
+				String jobDetails = "";
 				buildLogger.addBuildLogEntry("The RapidDeploy job has successfully started!");
 				boolean success = true;
 				final String jobId = RapidDeployConnector.extractJobId(output);
@@ -75,7 +75,7 @@ public class RunJobPlanTask implements TaskType {
 				fullLogs.append(logs).append("\n");
 
 				if(showFullLogs){
-					List<String> includedJobIds = extractIncludedJobIdsUnderPipelineJob(jobDetails);
+					List<String> includedJobIds = RapidDeployConnector.extractIncludedJobIdsUnderPipelineJob(jobDetails);
 					for(String internalJobId : includedJobIds){
 						fullLogs.append("LOGS RELATED TO JOB ID: ").append(internalJobId).append("\n");
 						fullLogs.append(RapidDeployConnector.pollRapidDeployJobLog(authenticationToken, serverUrl, internalJobId));
