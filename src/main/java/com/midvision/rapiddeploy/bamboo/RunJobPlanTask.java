@@ -72,7 +72,7 @@ public class RunJobPlanTask implements TaskType {
 				final StringBuilder fullLogs = new StringBuilder();
 				fullLogs.append(logs).append("\n");
 
-				if(showFullLogs){}
+				if(showFullLogs){
 					List<String> includedJobIds = extractIncludedJobIdsUnderPipelineJob(jobDetails);
 					for(String internalJobId : includedJobIds){
 						fullLogs.append("LOGS RELATED TO JOB ID: ").append(internalJobId).append("\n");
