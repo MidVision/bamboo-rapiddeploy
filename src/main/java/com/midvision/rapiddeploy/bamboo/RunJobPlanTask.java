@@ -1,7 +1,8 @@
 package com.midvision.rapiddeploy.bamboo;
 
 import org.jetbrains.annotations.NotNull;
-
+import java.util.ArrayList;
+import java.util.List;
 import com.atlassian.bamboo.build.logger.BuildLogger;
 import com.atlassian.bamboo.security.EncryptionService;
 import com.atlassian.bamboo.task.TaskContext;
@@ -31,6 +32,7 @@ public class RunJobPlanTask implements TaskType {
 
 			output = RapidDeployConnector.invokeRapidDeployJobPlanPollOutput(authenticationToken, serverUrl, jobPlanId, true);
 			if (!isAsynchronous) {
+				final String jobDetails = "";
 				buildLogger.addBuildLogEntry("The RapidDeploy job has successfully started!");
 				boolean success = true;
 				final String jobId = RapidDeployConnector.extractJobId(output);
@@ -40,7 +42,7 @@ public class RunJobPlanTask implements TaskType {
 					long milisToSleep = 30000L;
 					while (runningJob) {
 						Thread.sleep(milisToSleep);
-						final String jobDetails = RapidDeployConnector.pollRapidDeployJobDetails(authenticationToken, serverUrl, jobId);
+						jobDetails = RapidDeployConnector.pollRapidDeployJobDetails(authenticationToken, serverUrl, jobId);
 						final String jobStatus = RapidDeployConnector.extractJobStatus(jobDetails);
 						buildLogger.addBuildLogEntry("Job details: " + jobDetails);
 						buildLogger.addBuildLogEntry("Job status: " + jobStatus);
