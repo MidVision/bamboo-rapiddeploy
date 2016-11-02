@@ -76,7 +76,7 @@ public class RunJobPlanTask implements TaskType {
 					List<String> includedJobIds = extractIncludedJobIdsUnderPipelineJob(jobDetails);
 					for(String internalJobId : includedJobIds){
 						fullLogs.append("LOGS RELATED TO JOB ID: ").append(internalJobId).append("\n");
-						fullLogs.append(RapidDeployConnector.pollRapidDeployJobLog(authenticationToken, serverUrl, internalJobId);)
+						fullLogs.append(RapidDeployConnector.pollRapidDeployJobLog(authenticationToken, serverUrl, internalJobId));
 					}
 				}
 
