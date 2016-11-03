@@ -29,11 +29,40 @@
     </properties>
 
     <repositories>
-	<repository>
-		<id>MidVision</id>
-		<url>http://www.download.midvision.com/content/repositories/Community_release/</url>
-	</repository>
+    	<repository>
+    		<id>MidVision</id>
+    		<url>http://www.download.midvision.com/content/repositories/Community_release/</url>
+    	</repository>
+      <repository>
+        <id>atlassian-public</id>
+        <url>https://maven.atlassian.com/repository/public</url>
+        <snapshots>
+          <enabled>true</enabled>
+          <updatePolicy>never</updatePolicy>
+          <checksumPolicy>warn</checksumPolicy>
+        </snapshots>
+        <releases>
+          <enabled>true</enabled>
+          <checksumPolicy>warn</checksumPolicy>
+        </releases>
+      </repository>
     </repositories>
+
+    <pluginRepositories>
+      <pluginRepository>
+        <id>atlassian-public</id>
+        <url>https://maven.atlassian.com/repository/public</url>
+        <snapshots>
+          <enabled>true</enabled>
+          <updatePolicy>never</updatePolicy>
+          <checksumPolicy>warn</checksumPolicy>
+        </snapshots>
+        <releases>
+          <enabled>true</enabled>
+          <checksumPolicy>warn</checksumPolicy>
+        </releases>
+      </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
 	 <dependency>
@@ -93,7 +122,22 @@
                 <configuration>
                     <productVersion>${bamboo.version}</productVersion>
                     <productDataVersion>${bamboo.data.version}</productDataVersion>
-		</configuration>
+		                </configuration>
+            </plugin>
+            <plugin>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <source>1.6</source>
+                <target>1.6</target>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-deploy-plugin</artifactId>
+              <version>2.7</version>
+              <configuration>
+                <skip>true</skip>
+              </configuration>
             </plugin>
 
         </plugins>
