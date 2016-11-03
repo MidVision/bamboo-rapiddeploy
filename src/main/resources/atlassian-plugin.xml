@@ -25,4 +25,13 @@
       <resource type="freemarker" name="view" location="viewProjectDeployTask.ftl"/>
     </taskType>
 
+    <taskType name="RapidDeploy run job plan" class="com.midvision.rapiddeploy.bamboo.RunJobPlanTask" key="runJobPlanTask">
+      <description>Task can be used to perform job plan in rapiddeploy</description>
+      <configuration class="com.midvision.rapiddeploy.bamboo.RunJobPlanTaskConfigurator"/>
+      <category name="deployment"/>
+      <resource type="download" name="icon" location="midvision-icon.png"/>
+      <resource type="freemarker" name="edit" location="editRunJobPlanTask.ftl"/>
+      <resource type="freemarker" name="view" location="viewRunJobPlanTask.ftl"/>
+    </taskType>
+
 </atlassian-plugin>
