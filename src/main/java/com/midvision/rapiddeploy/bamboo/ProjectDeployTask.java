@@ -48,7 +48,7 @@ public class ProjectDeployTask implements TaskType {
 		try{
 			for(String variableKey : buildVariables.keys()){
 				Pattern pattern = Pattern.compile("@@.+@@");
-				Matcher matcher = = pattern.matcher(variableKey);
+				Matcher matcher = pattern.matcher(variableKey);
 				if(matcher.matches()){
 					dataDictionary.put(variableKey, buildVariables.get(variableKey));
 				}
