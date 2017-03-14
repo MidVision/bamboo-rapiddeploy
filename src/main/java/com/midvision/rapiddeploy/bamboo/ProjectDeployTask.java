@@ -10,14 +10,31 @@ import com.atlassian.bamboo.task.TaskResult;
 import com.atlassian.bamboo.task.TaskResultBuilder;
 import com.atlassian.bamboo.task.TaskType;
 import com.midvision.rapiddeploy.connector.RapidDeployConnector;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import com.atlassian.bamboo.variable.CustomVariableContext;
 
 public class ProjectDeployTask implements TaskType {
 
 	private EncryptionService encryptionService;
 
+	private CustomVariableContext customVariableContext;
+
 	@NotNull
 	@java.lang.Override
 	public TaskResult execute(@NotNull final TaskContext taskContext) throws TaskException {
+
+
+		Map<String, String> buildVariables = customVariableContext.getVariables(taskContext.getCommonContext());
+
+		Map<String, String> dataDictionary = new HashMap<String, String>();
+		try{
+			for(String variableKey : buildVariables.keys()){
+				Pattern pattern = Pattern.compile("@@.+@@");
+			}
+		}
 		final BuildLogger buildLogger = taskContext.getBuildLogger();
 		final String serverUrl = taskContext.getConfigurationMap().get("serverUrl");
 		final String authenticationToken = encryptionService.decrypt(taskContext.getConfigurationMap().get(PackageBuildTaskConfigurator.AUTHENTICATION_TOKEN));
@@ -95,5 +112,13 @@ public class ProjectDeployTask implements TaskType {
 
 	public void setEncryptionService(final EncryptionService encryptionService) {
 		this.encryptionService = encryptionService;
+	}
+
+	public CustomVariableContext getCustomVariableContext() {
+			return customVariableContext;
+	}
+
+	public void setCustomVariableContext(CustomVariableContext customVariableContext) {
+			this.customVariableContext = customVariableContext;
 	}
 }
