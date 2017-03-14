@@ -1,5 +1,7 @@
 package com.midvision.rapiddeploy.bamboo;
 
+import java.util.Map;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.atlassian.bamboo.build.logger.BuildLogger;
@@ -9,12 +11,8 @@ import com.atlassian.bamboo.task.TaskException;
 import com.atlassian.bamboo.task.TaskResult;
 import com.atlassian.bamboo.task.TaskResultBuilder;
 import com.atlassian.bamboo.task.TaskType;
-import com.midvision.rapiddeploy.connector.RapidDeployConnector;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import com.atlassian.bamboo.variable.CustomVariableContext;
+import com.midvision.rapiddeploy.connector.RapidDeployConnector;
 
 public class ProjectDeployTask implements TaskType {
 
@@ -41,22 +39,10 @@ public class ProjectDeployTask implements TaskType {
 			instance = taskContext.getConfigurationMap().get("instance");
 		}
 
-
+		
+		@SuppressWarnings("deprecation")
 		Map<String, String> buildVariables = customVariableContext.getVariables(taskContext.getCommonContext());
-
-		Map<String, String> dataDictionary = new HashMap<String, String>();
-		try{
-			for(String variableKey : buildVariables.keySet()){
-				Pattern pattern = Pattern.compile("@@.+@@");
-				Matcher matcher = pattern.matcher(variableKey);
-				if(matcher.matches()){
-					dataDictionary.put(variableKey, buildVariables.get(variableKey));
-				}
-			}
-		} catch (Exception e1) {
-			buildLogger.addBuildLogEntry("WARNING: Unable to retrieve the list of parameters. No data dictionary passed to the deployment.");
-		}
-
+		Map<String, String> dataDictionary = new RapidDeployVariablesRetriever(buildVariables).retrieveRapidDeployDictionaryItems();
 
 		String output = null;
 		try {

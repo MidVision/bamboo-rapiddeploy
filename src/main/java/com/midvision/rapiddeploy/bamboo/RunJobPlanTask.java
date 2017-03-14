@@ -11,17 +11,10 @@ import com.atlassian.bamboo.task.TaskResult;
 import com.atlassian.bamboo.task.TaskResultBuilder;
 import com.atlassian.bamboo.task.TaskType;
 import com.midvision.rapiddeploy.connector.RapidDeployConnector;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import com.atlassian.bamboo.variable.CustomVariableContext;
 
 public class RunJobPlanTask implements TaskType {
 
 	private EncryptionService encryptionService;
-
-	private CustomVariableContext customVariableContext;
 
 	@NotNull
 	@java.lang.Override
@@ -33,22 +26,6 @@ public class RunJobPlanTask implements TaskType {
 
 		final Boolean isAsynchronous = taskContext.getConfigurationMap().get("isAsynchronous").equals("true") ? true : false;
 		final Boolean showFullLogs = taskContext.getConfigurationMap().get("showFullLogs").equals("true") ? true : false;
-
-
-		Map<String, String> buildVariables = customVariableContext.getVariables(taskContext.getCommonContext());
-
-		Map<String, String> dataDictionary = new HashMap<String, String>();
-		try{
-			for(String variableKey : buildVariables.keySet()){
-				Pattern pattern = Pattern.compile("@@.+@@");
-				Matcher matcher = pattern.matcher(variableKey);
-				if(matcher.matches()){
-					dataDictionary.put(variableKey, buildVariables.get(variableKey));
-				}
-			}
-		} catch (Exception e1) {
-			buildLogger.addBuildLogEntry("WARNING: Unable to retrieve the list of parameters. No data dictionary passed to the deployment.");
-		}
 
 		String output = null;
 		try {
@@ -124,14 +101,5 @@ public class RunJobPlanTask implements TaskType {
 
 	public void setEncryptionService(final EncryptionService encryptionService) {
 		this.encryptionService = encryptionService;
-	}
-
-
-	public CustomVariableContext getCustomVariableContext() {
-			return customVariableContext;
-	}
-
-	public void setCustomVariableContext(CustomVariableContext customVariableContext) {
-			this.customVariableContext = customVariableContext;
 	}
 }
