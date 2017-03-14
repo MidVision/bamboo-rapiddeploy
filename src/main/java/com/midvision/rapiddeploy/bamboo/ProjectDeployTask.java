@@ -25,16 +25,6 @@ public class ProjectDeployTask implements TaskType {
 	@NotNull
 	@java.lang.Override
 	public TaskResult execute(@NotNull final TaskContext taskContext) throws TaskException {
-
-
-		Map<String, String> buildVariables = customVariableContext.getVariables(taskContext.getCommonContext());
-
-		Map<String, String> dataDictionary = new HashMap<String, String>();
-		try{
-			for(String variableKey : buildVariables.keys()){
-				Pattern pattern = Pattern.compile("@@.+@@");
-			}
-		}
 		final BuildLogger buildLogger = taskContext.getBuildLogger();
 		final String serverUrl = taskContext.getConfigurationMap().get("serverUrl");
 		final String authenticationToken = encryptionService.decrypt(taskContext.getConfigurationMap().get(PackageBuildTaskConfigurator.AUTHENTICATION_TOKEN));
@@ -50,11 +40,31 @@ public class ProjectDeployTask implements TaskType {
 				&& taskContext.getConfigurationMap().get("instance").equals("") == false) {
 			instance = taskContext.getConfigurationMap().get("instance");
 		}
+
+
+		Map<String, String> buildVariables = customVariableContext.getVariables(taskContext.getCommonContext());
+
+		Map<String, String> dataDictionary = new HashMap<String, String>();
+		try{
+			for(String variableKey : buildVariables.keys()){
+				Pattern pattern = Pattern.compile("@@.+@@");
+				Matcher matcher = = pattern.matcher(variableKey);
+				if(matcher.matches()){
+					dataDictionary.put(variableKey, buildVariables.get(variableKey));
+				}
+			}
+		} catch (IOException e1) {
+			buildLogger.addBuildLogEntry("WARNING: Unable to retrieve the list of parameters. No data dictionary passed to the deployment.");
+		} catch (InterruptedException e1) {
+			buildLogger.addBuildLogEntry("WARNING: Unable to retrieve the list of parameters. No data dictionary passed to the deployment.");
+		}
+
+
 		String output = null;
 		try {
 			final String targetName = instance != null && !"".equals(instance) ? server + "." + environment + "." + instance + "." + application : server + "."
 					+ environment + "." + application;
-			output = RapidDeployConnector.invokeRapidDeployDeploymentPollOutput(authenticationToken, serverUrl, project, targetName, packageName, false, true);
+			output = RapidDeployConnector.invokeRapidDeployDeploymentPollOutput(authenticationToken, serverUrl, project, targetName, packageName, false, true, dataDictionary);
 			if (!isAsynchronous) {
 				buildLogger.addBuildLogEntry("The RapidDeploy job has successfully started!");
 				boolean success = true;
