@@ -46,16 +46,14 @@ public class ProjectDeployTask implements TaskType {
 
 		Map<String, String> dataDictionary = new HashMap<String, String>();
 		try{
-			for(String variableKey : buildVariables.keys()){
+			for(String variableKey : buildVariables.keySet()){
 				Pattern pattern = Pattern.compile("@@.+@@");
 				Matcher matcher = pattern.matcher(variableKey);
 				if(matcher.matches()){
 					dataDictionary.put(variableKey, buildVariables.get(variableKey));
 				}
 			}
-		} catch (IOException e1) {
-			buildLogger.addBuildLogEntry("WARNING: Unable to retrieve the list of parameters. No data dictionary passed to the deployment.");
-		} catch (InterruptedException e1) {
+		} catch (Exception e1) {
 			buildLogger.addBuildLogEntry("WARNING: Unable to retrieve the list of parameters. No data dictionary passed to the deployment.");
 		}
 
