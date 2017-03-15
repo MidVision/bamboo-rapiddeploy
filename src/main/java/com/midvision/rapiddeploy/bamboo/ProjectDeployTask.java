@@ -1,5 +1,7 @@
 package com.midvision.rapiddeploy.bamboo;
 
+import java.util.Map;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.atlassian.bamboo.build.logger.BuildLogger;
@@ -9,11 +11,14 @@ import com.atlassian.bamboo.task.TaskException;
 import com.atlassian.bamboo.task.TaskResult;
 import com.atlassian.bamboo.task.TaskResultBuilder;
 import com.atlassian.bamboo.task.TaskType;
+import com.atlassian.bamboo.variable.CustomVariableContext;
 import com.midvision.rapiddeploy.connector.RapidDeployConnector;
 
 public class ProjectDeployTask implements TaskType {
 
 	private EncryptionService encryptionService;
+
+	private CustomVariableContext customVariableContext;
 
 	@NotNull
 	@java.lang.Override
@@ -33,11 +38,17 @@ public class ProjectDeployTask implements TaskType {
 				&& taskContext.getConfigurationMap().get("instance").equals("") == false) {
 			instance = taskContext.getConfigurationMap().get("instance");
 		}
+
+		
+		@SuppressWarnings("deprecation")
+		Map<String, String> buildVariables = customVariableContext.getVariables(taskContext.getCommonContext());
+		Map<String, String> dataDictionary = new RapidDeployVariablesRetriever(buildVariables).retrieveRapidDeployDictionaryItems();
+
 		String output = null;
 		try {
 			final String targetName = instance != null && !"".equals(instance) ? server + "." + environment + "." + instance + "." + application : server + "."
 					+ environment + "." + application;
-			output = RapidDeployConnector.invokeRapidDeployDeploymentPollOutput(authenticationToken, serverUrl, project, targetName, packageName, false, true);
+			output = RapidDeployConnector.invokeRapidDeployDeploymentPollOutput(authenticationToken, serverUrl, project, targetName, packageName, false, true, dataDictionary);
 			if (!isAsynchronous) {
 				buildLogger.addBuildLogEntry("The RapidDeploy job has successfully started!");
 				boolean success = true;
@@ -95,5 +106,13 @@ public class ProjectDeployTask implements TaskType {
 
 	public void setEncryptionService(final EncryptionService encryptionService) {
 		this.encryptionService = encryptionService;
+	}
+
+	public CustomVariableContext getCustomVariableContext() {
+			return customVariableContext;
+	}
+
+	public void setCustomVariableContext(CustomVariableContext customVariableContext) {
+			this.customVariableContext = customVariableContext;
 	}
 }
