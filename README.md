@@ -5,6 +5,7 @@ This plugin allows you to use [RapidDeploy](http://www.midvision.com/product) fr
 There are two tasks that you can use in your jobs in Bamboo
 * [RapidDeploy build package task](http://docs.midvision.com/LATEST/project/package.html) invoke RapidDeploy server to build a package in the configured artifact repository. You can check the result and the log output in the Job Result summary in your Bamboo instance.
 * [RapidDeploy project deploy task](http://docs.midvision.com/LATEST/project/deployment.html) invoke a deployment task in RapidDeploy server. Multiple deployments can be executed sequentially or parallel. You can check the result and the process logs in the Job Result summary in your Bamboo instance.
+* [RapidDeploy run job plan task]invoke a job plan from RapidDeploy server. You can check the result and the process logs in the Job Result summary in your Bamboo instance.
 
 ### RapidDeploy build package task
 
