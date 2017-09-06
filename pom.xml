@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.midvision.plugins</groupId>
     <artifactId>bamboo-rapiddeploy</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4</version>
 
     <organization>
         <name>MidVision</name>
@@ -144,7 +144,7 @@
 		<connection>scm:git:https://github.com/MidVision/bamboo-rapiddeploy.git</connection>
 		<developerConnection>scm:git:https://github.com/MidVision/bamboo-rapiddeploy.git</developerConnection>
 		<url>https://github.com/MidVision/bamboo-rapiddeploy</url>
-		<tag>HEAD</tag>
+		<tag>bamboo-rapiddeploy-1.4</tag>
 	</scm>
 
 	<distributionManagement>
