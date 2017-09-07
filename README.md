@@ -39,6 +39,22 @@ Attributes:
 
 ![Configuring project deploy task](https://raw.githubusercontent.com/MidVision/bamboo-rapiddeploy/master/src/main/resources/projectDeployTaskConfiguration.png "Configuring project deploy task")
 
+In RapidDeploy project deploy task you can pass data dictionary values to the deployment as Bamboo variables. In order to do that you need to specify bamboo variable with prefix "rapiddeploy.". For example: if you want in RapidDeploy to override dictionary item with key @@FROM_BAMBOO@@ during deployment performed by Bamboo plugin - you need to specify Bambo Variable with key: rapiddeploy.FROM_BAMBOO
+You can do it when you configure Build Plan:
+
+
+![Bamboo Build Variables](https://raw.githubusercontent.com/MidVision/bamboo-rapiddeploy/master/src/main/resources/BambooVariableBuild.png "Bamboo Build Variables")
+
+And also when you configure your Deployment project in Bamboo:
+
+![Deployment Project Configuration](https://raw.githubusercontent.com/MidVision/bamboo-rapiddeploy/master/src/main/resources/DeploymentProjectConfiguration.png "Deployment Project Configuration")
+
+![Bamboo deployment variables](https://raw.githubusercontent.com/MidVision/bamboo-rapiddeploy/master/src/main/resources/BambooVariablesDeployment.png "Bamboo deployment variables")
+
+In RapidDeploy you will use them as Data Dictionary items:
+
+![Rd task confguration](https://raw.githubusercontent.com/MidVision/bamboo-rapiddeploy/master/src/main/resources/RdTask.png "Rd task confguration")
+
 
 ### RapidDeploy run job plan task
 
